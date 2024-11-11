@@ -57,6 +57,17 @@ df_wide_sum <- df_wide %>% group_by(region_Delta) %>%
 df_wide_sum[1,2:8] <- df_wide_sum[1,2:8] / 4709                                  # convert obs into % of delta/nondelta to choose factor
 df_wide_sum[2,2:8] <- df_wide_sum[2,2:8] / 343
 
+df_mean <- delta %>% 
+  summarise(count_1 = mean(value_1),
+            count_2 = mean(value_2),
+            count_3 = mean(value_3),
+            count_4 = mean(value_4),
+            count_5 = mean(value_5),
+            count_6 = mean(value_6),
+            count_7 = mean(value_7))
+
+
+
 ## make other variables ---------------------------------------------------------
 
 delta$foodsecure <- ifelse(delta$Q42 == 2,0,1)
@@ -102,6 +113,28 @@ delta <- delta %>%
     Q9 == 12 ~ 150000,
     TRUE ~ NA_real_))
 
+delta[, 52:60][is.na(delta[, 52:60])] <- 0
+
+delta <- delta %>%
+  rowwise() %>%
+  mutate(sum_expend = sum(across(ends_with("expend")), na.rm = T))
+delta <- delta[-which(delta$sum_expend <= 0),]
+
+delta <- delta %>%
+  rowwise() %>%
+  mutate(sumPCE = sum(across(starts_with("Q24.w")), na.rm = T))
+
+
+sm_whole_expend <- mean(delta$supermarketwhole_expend)+ sd(delta$supermarketwhole_expend)*2
+sm_food_expend <- mean(delta$supermarketfood_expend)+ sd(delta$supermarketfood_expend)*2
+conv_expend <- mean(delta$convenience_expend)+ sd(delta$convenience_expend)*2
+
+
+delta <- delta[-which(delta$supermarketwhole_expend > sm_whole_expend),]
+delta <- delta[-which(delta$supermarketfood_expend > sm_food_expend),]
+delta <- delta[-which(delta$convenience_expend > conv_expend),]
+
+
 delta$supermarketwhole_expend_p <- delta$supermarketwhole_expend/(delta$income/52)
 delta$supermarketfood_expend_p <- delta$supermarketfood_expend/(delta$income/52)
 delta$healthfood_expend_p <- delta$healthfood_expend/(delta$income/52)
@@ -112,11 +145,28 @@ delta$smallstore_expend_p <- delta$smallstore_expend/(delta$income/52)
 delta$farmmarket_expend_p <- delta$farmmarket_expend/(delta$income/52)
 delta$directfarm_expend_p <- delta$directfarm_expend/(delta$income/52)
 
-#delta <- delta[-which(delta$supermarketwhole_expend_p > 1),]
-#delta <- delta[-which(delta$supermarketfood_expend_p > 1),]
-#delta <- delta[-which(delta$convenience_expend_p > 1),]
-#delta <- delta[-which(delta$online_expend_p > 1),]
-#delta <- delta[-which(delta$online_expend_p > 1),]
+
+col_names <- colnames(delta)
+col_positions <- seq_along(col_names)
+col_info <- data.frame(Column = col_names, Position = col_positions)             # to make col reference dataframe
+
+delta$supermarketwhole_expend_t <- delta$supermarketwhole_expend/delta$sum_expend
+delta$supermarketfood_expend_t <- delta$supermarketfood_expend/delta$sum_expend
+delta$healthfood_expend_t <- delta$healthfood_expend/delta$sum_expend
+delta$convenience_expend_t <- delta$convenience_expend/delta$sum_expend
+delta$online_expend_t <- delta$online_expend/delta$sum_expend
+delta$discount_expend_t <- delta$discount_expend/delta$sum_expend
+delta$smallstore_expend_t <- delta$smallstore_expend/delta$sum_expend
+delta$farmmarket_expend_t <- delta$farmmarket_expend/delta$sum_expend
+delta$directfarm_expend_t <- delta$directfarm_expend/delta$sum_expend
+
+
+#supermarketwhole <- delta[ c(4,186) ]
+#delta_expend <- delta[ c(4,52:60) ]
+
+delta$rural <- if_else(delta$Q101 == 1, 1, 0)
+delta$urban <- if_else(delta$Q101 == 3, 1, 0)
+delta$suburban <- if_else(delta$Q101 == 2, 1, 0)
 
 
 ## write rds files -------------------------------------------------------------
