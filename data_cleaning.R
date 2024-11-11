@@ -102,7 +102,22 @@ delta <- delta %>%
     Q9 == 12 ~ 150000,
     TRUE ~ NA_real_))
 
-delat$supermarketwhole_expend_p <- 
+delta$supermarketwhole_expend_p <- delta$supermarketwhole_expend/(delta$income/52)
+delta$supermarketfood_expend_p <- delta$supermarketfood_expend/(delta$income/52)
+delta$healthfood_expend_p <- delta$healthfood_expend/(delta$income/52)
+delta$convenience_expend_p <- delta$convenience_expend/(delta$income/52)
+delta$online_expend_p <- delta$online_expend/(delta$income/52)
+delta$discount_expend_p <- delta$discount_expend/(delta$income/52)
+delta$smallstore_expend_p <- delta$smallstore_expend/(delta$income/52)
+delta$farmmarket_expend_p <- delta$farmmarket_expend/(delta$income/52)
+delta$directfarm_expend_p <- delta$directfarm_expend/(delta$income/52)
+
+#delta <- delta[-which(delta$supermarketwhole_expend_p > 1),]
+#delta <- delta[-which(delta$supermarketfood_expend_p > 1),]
+#delta <- delta[-which(delta$convenience_expend_p > 1),]
+#delta <- delta[-which(delta$online_expend_p > 1),]
+#delta <- delta[-which(delta$online_expend_p > 1),]
+
 
 ## write rds files -------------------------------------------------------------
 
