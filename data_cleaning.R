@@ -43,31 +43,30 @@ df_wide <- factor_long %>%
   pivot_wider(names_from = fv_top_three_factors, values_from = value, 
               values_fill = 0, names_glue = "value_{fv_top_three_factors}")      # make wide data for value factors 
 
+names(df_wide)[names(df_wide) == "value_1"] <- "locally_grown"
+names(df_wide)[names(df_wide) == "value_2"] <- "organic"
+names(df_wide)[names(df_wide) == "value_3"] <- "local_econ"
+names(df_wide)[names(df_wide) == "value_4"] <- "afford"
+names(df_wide)[names(df_wide) == "value_5"] <- "healthy"
+names(df_wide)[names(df_wide) == "value_6"] <- "social_resp"
+names(df_wide)[names(df_wide) == "value_7"] <- "access"
+
 delta_factors <- df_wide[!df_wide$region_Delta == 0, ]
 nondelta_factors <- df_wide[!df_wide$region_Delta == 1, ]
 
 df_wide$region_Delta <- as.factor(df_wide$region_Delta)
 
 df_wide_sum <- df_wide %>% group_by(region_Delta) %>%
-  summarise(count_1 = sum(value_1),
-            count_2 = sum(value_2),
-            count_3 = sum(value_3),
-            count_4 = sum(value_4),
-            count_5 = sum(value_5),
-            count_6 = sum(value_6),
-            count_7 = sum(value_7))
+  summarise(count_1 = sum(locally_grown),
+            count_2 = sum(organic),
+            count_3 = sum(local_econ),
+            count_4 = sum(afford),
+            count_5 = sum(healthy),
+            count_6 = sum(social_resp),
+            count_7 = sum(access))
 
 df_wide_sum[1,2:8] <- df_wide_sum[1,2:8] / 4709                                  # convert obs into % of delta/nondelta to choose factor
 df_wide_sum[2,2:8] <- df_wide_sum[2,2:8] / 343
-
-#df_mean <- delta %>% 
-#  summarise(count_1 = mean(value_1),
-#            count_2 = mean(value_2),
-#            count_3 = mean(value_3),
-#            count_4 = mean(value_4),
-#            count_5 = mean(value_5),
-#            count_6 = mean(value_6),
-#            count_7 = mean(value_7))
 
 
 
@@ -92,6 +91,11 @@ names(delta)[names(delta) == "Q20.1_6_1"] <- "discount_expend"
 names(delta)[names(delta) == "Q20.1_7_1"] <- "smallstore_expend"
 names(delta)[names(delta) == "Q20.1_8_1"] <- "farmmarket_expend"
 names(delta)[names(delta) == "Q20.1_9_1"] <- "directfarm_expend"
+names(delta)[names(delta) == "Q20.1_10_1"] <- "foodbox_expend"
+names(delta)[names(delta) == "Q20.1_11_1"] <- "mealkit_expend"
+names(delta)[names(delta) == "Q20.1_12_1"] <- "market_expend"
+names(delta)[names(delta) == "Q20.1_13_1"] <- "chainrest_expend"
+names(delta)[names(delta) == "Q20.1_14_1"] <- "localrest_expend"
 
 
 ## convert values ----------------------------------------------------------
@@ -184,7 +188,11 @@ names(nondelta)[names(nondelta) == "Q20.1_6_1"] <- "discount_expend"
 names(nondelta)[names(nondelta) == "Q20.1_7_1"] <- "smallstore_expend"
 names(nondelta)[names(nondelta) == "Q20.1_8_1"] <- "farmmarket_expend"
 names(nondelta)[names(nondelta) == "Q20.1_9_1"] <- "directfarm_expend"
-
+names(nondelta)[names(nondelta) == "Q20.1_10_1"] <- "foodbox_expend"
+names(nondelta)[names(nondelta) == "Q20.1_11_1"] <- "mealkit_expend"
+names(nondelta)[names(nondelta) == "Q20.1_12_1"] <- "market_expend"
+names(nondelta)[names(nondelta) == "Q20.1_13_1"] <- "chainrest_expend"
+names(nondelta)[names(nondelta) == "Q20.1_14_1"] <- "localrest_expend"
 
 
 nondelta <- nondelta %>%
@@ -258,6 +266,25 @@ nondelta$suburban <- if_else(nondelta$Q101 == 2, 1, 0)
 
 nondelta_factors <- nondelta_factors[ -c(2:3) ]
 nondelta <- merge(nondelta, nondelta_factors, by = "responseID")
+
+
+
+summary_nondelta <- nondelta %>%
+  select(ends_with("_expend")) %>%  # Select columns ending with "_expend"
+  summarise(
+    across(
+      everything(), 
+      list(mean = ~ mean(.), sd = ~ sd(.)), 
+      .names = "{.col}_{.fn}"
+    )
+  ) %>%
+  pivot_longer(
+    cols = everything(),
+    names_to = c("column", ".value"),
+    names_sep = "_"
+  )
+
+
 
 ## write rds files -------------------------------------------------------------
 
