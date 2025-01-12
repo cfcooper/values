@@ -39,9 +39,7 @@ income_reg2 <- lm(sum_expend ~income + locally_grown + organic + local_econ + af
                     healthy + social_resp + access, data = nondelta)
 summary(income_reg2)
 
-hh_reg2 <- lm(sum_expend ~Q49 + value_1 + value_2 + value_3 + value_4 +
-                value_5 + value_6 + value_7, data = nondelta)
-summary(hh_reg2)
+
 
 nondelta$income_weekly <- nondelta$income/52
 

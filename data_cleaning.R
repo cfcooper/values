@@ -170,7 +170,11 @@ delta$discount_expend_t <- delta$discount_expend/delta$sum_expend
 delta$smallstore_expend_t <- delta$smallstore_expend/delta$sum_expend
 delta$farmmarket_expend_t <- delta$farmmarket_expend/delta$sum_expend
 delta$directfarm_expend_t <- delta$directfarm_expend/delta$sum_expend
-
+delta$foodbox_expend_t <- delta$foodbox_expend/delta$sum_expend
+delta$mealkit_expend_t <- delta$mealkit_expend/delta$sum_expend
+delta$market_expend_t <- delta$market_expend/delta$sum_expend
+delta$chainrest_expend_t <- delta$chainrest_expend/delta$sum_expend
+delta$localrest_expend_t <- delta$localrest_expend/delta$sum_expend
 
 #supermarketwhole <- delta[ c(4,186) ]
 #delta_expend <- delta[ c(4,52:60) ]
@@ -265,7 +269,11 @@ nondelta$discount_expend_t <- nondelta$discount_expend/nondelta$sum_expend
 nondelta$smallstore_expend_t <- nondelta$smallstore_expend/nondelta$sum_expend
 nondelta$farmmarket_expend_t <- nondelta$farmmarket_expend/nondelta$sum_expend
 nondelta$directfarm_expend_t <- nondelta$directfarm_expend/nondelta$sum_expend
-
+nondelta$foodbox_expend_t <- nondelta$foodbox_expend/nondelta$sum_expend
+nondelta$mealkit_expend_t <- nondelta$mealkit_expend/nondelta$sum_expend
+nondelta$market_expend_t <- nondelta$market_expend/nondelta$sum_expend
+nondelta$chainrest_expend_t <- nondelta$chainrest_expend/nondelta$sum_expend
+nondelta$localrest_expend_t <- nondelta$localrest_expend/nondelta$sum_expend
 
 
 nondelta$rural <- if_else(nondelta$Q101 == 1, 1, 0)
