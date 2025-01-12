@@ -18,6 +18,9 @@ delta <- readRDS("cleaneddata/delta.rds")
 nondelta <- readRDS("cleaneddata/nondelta.rds")
 write.csv(delta, "delta_raw.csv")
 
+nondelta$income_weekly <- nondelta$income/52
+delta$income_weekly <- delta$income/52
+
 ## nondelta regs  -----------------------------------------------------------
 
 income_reg <- lm(sum_expend ~income, data = nondelta)
@@ -32,8 +35,8 @@ summary(hh_i_reg)
 foodsecure_reg <- lm(sum_expend ~foodsecure, data = nondelta)
 summary(foodsecure_reg)
 
-income_reg2 <- lm(sum_expend ~income + value_1 + value_2 + value_3 + value_4 +
-                    value_5 + value_6 + value_7, data = nondelta)
+income_reg2 <- lm(sum_expend ~income + locally_grown + organic + local_econ + afford +
+                    healthy + social_resp + access, data = nondelta)
 summary(income_reg2)
 
 hh_reg2 <- lm(sum_expend ~Q49 + value_1 + value_2 + value_3 + value_4 +
@@ -57,8 +60,8 @@ summary(hh_i_reg)
 foodsecure_reg <- lm(sum_expend ~foodsecure, data = delta)
 summary(foodsecure_reg)
 
-income_reg2 <- lm(sum_expend ~income + value_1 + value_2 + value_3 + value_4 +
-                    value_5 + value_6 + value_7, data = delta)
+income_reg2 <- lm(sum_expend ~income + locally_grown + organic + local_econ + afford +
+                    healthy + social_resp + access, data = delta)
 summary(income_reg2)
 
 hh_reg2 <- lm(sum_expend ~Q49 + value_1 + value_2 + value_3 + value_4 +
@@ -71,9 +74,7 @@ summary(hh_reg3)
 
 ## non delta channels ---------------------------------------------------------
 
-super_whole_reg <- lm(supermarketwhole_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                        value_5 + value_6 + value_7, data = nondelta)
-summary(super_whole_reg)
+
 
 super_whole_reg <- lm(supermarketwhole_expend ~ income_weekly + value_2, data = nondelta)
 summary(super_whole_reg)
@@ -127,78 +128,13 @@ summary(farmmark_reg)
 
 
 
-# $ amount -----------------------------------------------------------
 
-delta$income_weekly <- delta$income/52
+# PCE additions ----- ----- 
+super_whole_reg2 <- lm(supermarketwhole_expend ~ income_weekly + PCE_health + PCE_local + PCE_socialresp + PCE_gender, data = nondelta)
+summary(super_whole_reg2)
 
-super_whole_reg <- lm(supermarketwhole_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                        value_5 + value_6 + value_7, data = delta)
-summary(super_whole_reg)
+health_reg2 <- lm(healthfood_expend ~ income_weekly + PCE_health + PCE_local + PCE_socialresp + PCE_gender, data = delta)
+summary(health_reg2)
 
-
-
-super_health_reg <- lm(healthfood_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                         value_5 + value_6 + value_7, data = delta)
-summary(super_health_reg)
-
-
-conv_reg <- lm(convenience_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                 value_5 + value_6 + value_7, data = delta)
-summary(conv_reg)
-
-
-farmmark_reg <- lm(farmmarket_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                     value_5 + value_6 + value_7, data = delta)
-summary(farmmark_reg)
-
-
-directfarm_reg <- lm(directfarm_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                       value_5 + value_6 + value_7, data = delta)
-summary(directfarm_reg)
-
-discount_reg <- lm(discount_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                     value_5 + value_6 + value_7, data = delta)
-summary(discount_reg)
-
-
-supermarketfood_reg <- lm(supermarketfood_expend ~ income_weekly + value_1 + value_2 + value_3 + value_4 +
-                     value_5 + value_6 + value_7, data = delta)
-summary(supermarketfood_reg)
-
-
-print(colMeans(delta))
-
-
-
-# % of expend amount -----------------------------------------------------------
-
-super_whole_reg <- lm(supermarketwhole_expend_t ~foodsecure + value_1 + value_2 + value_3 + value_4 +
-                        value_5 + value_6 + value_7 + income + sumPCE + Q49 + rural + urban, data = delta)
-summary(super_whole_reg)
-
-
-
-super_health_reg <- lm(healthfood_expend_t ~foodsecure + value_1 + value_2 + value_3 + value_4 +
-                         value_5 + value_6 + value_7 + income + sumPCE + Q49 + rural + urban, data = delta)
-summary(super_health_reg)
-
-
-conv_reg <- lm(convenience_expend_t ~foodsecure + value_1 + value_2 + value_3 + value_4 +
-                 value_5 + value_6 + value_7 + income + sumPCE + Q49 + rural + urban, data = delta)
-summary(conv_reg)
-
-
-farmmark_reg <- lm(farmmarket_expend_t ~foodsecure + value_1 + value_2 + value_3 + value_4 +
-                     value_5 + value_6 + value_7 + income + sumPCE + Q49 + rural + urban, data = delta)
-summary(farmmark_reg)
-
-
-directfarm_reg <- lm(directfarm_expend_t ~foodsecure + value_1 + value_2 + value_3 + value_4 +
-                     value_5 + value_6 + value_7 + income + sumPCE, data = delta)
-summary(directfarm_reg)
-
-
-discount_reg <- lm(discount_expend_t ~foodsecure + value_1 + value_2 + value_3 + value_4 +
-                       value_5 + value_6 + value_7 + income + sumPCE, data = delta)
-summary(discount_reg)
-
+health_reg2 <- lm(healthfood_expend ~ income_weekly + PCE_health + PCE_local + PCE_socialresp + PCE_gender, data = nondelta)
+summary(health_reg2)

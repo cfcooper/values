@@ -97,6 +97,10 @@ names(delta)[names(delta) == "Q20.1_12_1"] <- "market_expend"
 names(delta)[names(delta) == "Q20.1_13_1"] <- "chainrest_expend"
 names(delta)[names(delta) == "Q20.1_14_1"] <- "localrest_expend"
 
+names(delta)[names(delta) == "Q24.w.attn.check_1"] <- "PCE_health"
+names(delta)[names(delta) == "Q24.w.attn.check_2"] <- "PCE_local"
+names(delta)[names(delta) == "Q24.w.attn.check_3"] <- "PCE_socialresp"
+names(delta)[names(delta) == "Q24.w.attn.check_6"] <- "PCE_gender"
 
 ## convert values ----------------------------------------------------------
 
@@ -120,7 +124,7 @@ delta <- delta %>%
     Q9 == 12 ~ 150000,
     TRUE ~ NA_real_))
 
-delta[, 52:60][is.na(delta[, 52:60])] <- 0
+delta[, 52:65][is.na(delta[, 52:65])] <- 0
 
 delta <- delta %>%
   rowwise() %>%
@@ -194,6 +198,10 @@ names(nondelta)[names(nondelta) == "Q20.1_12_1"] <- "market_expend"
 names(nondelta)[names(nondelta) == "Q20.1_13_1"] <- "chainrest_expend"
 names(nondelta)[names(nondelta) == "Q20.1_14_1"] <- "localrest_expend"
 
+names(nondelta)[names(nondelta) == "Q24.w.attn.check_1"] <- "PCE_health"
+names(nondelta)[names(nondelta) == "Q24.w.attn.check_2"] <- "PCE_local"
+names(nondelta)[names(nondelta) == "Q24.w.attn.check_3"] <- "PCE_socialresp"
+names(nondelta)[names(nondelta) == "Q24.w.attn.check_6"] <- "PCE_gender"
 
 nondelta <- nondelta %>%
   mutate(income = case_when(
@@ -211,7 +219,7 @@ nondelta <- nondelta %>%
     Q9 == 12 ~ 150000,
     TRUE ~ NA_real_))
 
-nondelta[, 52:60][is.na(nondelta[, 52:60])] <- 0
+nondelta[, 52:65][is.na(nondelta[, 52:65])] <- 0
 
 nondelta <- nondelta %>%
   rowwise() %>%
