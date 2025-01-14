@@ -25,10 +25,10 @@ nondelta$rucc <- as.numeric(nondelta$rucc)
 
 ## value models ---------------------------------------------------------------
 
-affordable <- lm(afford ~ Q8 + Q5 + hispanic + race_1 + race_3 + rucc, data = delta)
+affordable <- lm(afford ~ Q8 + Q5 + hispanic + native + black + rucc, data = delta)
 summary(affordable)
 
-affordable <- lm(afford ~ Q8 + Q5 + hispanic + race_1 + race_3 + race_5 + race_7 + race_8 + rucc, data = nondelta)
+affordable <- lm(afford ~ Q8 + Q5 + hispanic + native + black + hh + rucc, data = nondelta)
 summary(affordable)
 
 
@@ -602,33 +602,33 @@ write.csv(abs_nondelta, "cleaneddata/regress/abs_nondelta_r.csv")
 ##round 4_1 nondelta --------------------------------------------
 regressions <- list(
   lm(supermarketwhole_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(supermarketfood_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(healthfood_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(convenience_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(online_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(discount_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(smallstore_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(farmmarket_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(directfarm_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(foodbox_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(mealkit_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(market_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc +  Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(chainrest_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc + Q5 + hispanic + race_1 + race_3 , data = nondelta),
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta),
   lm(localrest_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc +  Q5 + hispanic + race_1 + race_3 , data = nondelta)
+       healthy + social_resp + access + rucc + Q5 + hispanic + native + black + Q49, data = nondelta)
 )
 
 
@@ -641,7 +641,7 @@ pvalues <- lapply(regressions, function(model) {
 
 pvalue_df <- do.call(rbind, pvalues)
 colnames(pvalue_df) <- c("(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-                         "healthy", "social_resp", "access", "rucc","Q5", "hispanic", "race_1","race_3")
+                         "healthy", "social_resp", "access", "rucc","Q5", "hispanic", "native","black","Q49")
 pvalue_df <- as.data.frame(pvalue_df)
 
 # Add a column for the regression number
@@ -650,7 +650,7 @@ pvalue_df$Regression <- paste0("Regression_", 1:length(regressions))
 # Arrange the data into a long format where each coefficient is its own column
 pvalue_long <- pvalue_df %>%
   select(Regression, "(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-         "healthy", "social_resp", "access", "rucc","Q5", "hispanic", "race_1","race_3") %>%
+         "healthy", "social_resp", "access", "rucc","Q5", "hispanic", "native","black","Q49") %>%
   arrange(Regression)
 
 #adjusted r2

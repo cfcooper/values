@@ -327,7 +327,15 @@ race_wide <- race_long %>%
 race_wide <- race_wide[c("responseID","race_1","race_2","race_3","race_4","race_5","race_6",
                          "race_10","race_12","race_14")]
 delta <- merge(delta, race_wide, by = "responseID")
-
+names(delta)[names(delta) == "race_1"] <- "native"
+names(delta)[names(delta) == "race_2"] <- "indian"
+names(delta)[names(delta) == "race_3"] <- "black"
+names(delta)[names(delta) == "race_4"] <- "guam"
+names(delta)[names(delta) == "race_5"] <- "chinese"
+names(delta)[names(delta) == "race_6"] <- "filipino"
+names(delta)[names(delta) == "race_10"] <- "samoan"
+names(delta)[names(delta) == "race_12"] <- "white"
+names(delta)[names(delta) == "race_14"] <- "none"
 
 race_long <- nondelta %>% separate_rows(Q7, sep = ",")  %>%   # make long data for race
   mutate(Q7 = as.numeric(Q7))
@@ -341,6 +349,20 @@ race_wide <- race_wide[c("responseID","race_1","race_2","race_3","race_4","race_
                          "race_7","race_8","race_9","race_10","race_11","race_12","race_13","race_14",
                          "race_15")]
 nondelta <- merge(nondelta, race_wide, by = "responseID")
+
+names(nondelta)[names(nondelta) == "race_1"] <- "native"
+names(nondelta)[names(nondelta) == "race_2"] <- "indian"
+names(nondelta)[names(nondelta) == "race_3"] <- "black"
+names(nondelta)[names(nondelta) == "race_4"] <- "guam"
+names(nondelta)[names(nondelta) == "race_5"] <- "chinese"
+names(nondelta)[names(nondelta) == "race_6"] <- "filipino"
+names(nondelta)[names(nondelta) == "race_7"] <- "japanese"
+names(nondelta)[names(nondelta) == "race_8"] <- "korean"
+names(nondelta)[names(nondelta) == "race_9"] <- "hawaiian"
+names(nondelta)[names(nondelta) == "race_10"] <- "samoan"
+names(nondelta)[names(nondelta) == "race_11"] <- "vietnamese"
+names(nondelta)[names(nondelta) == "race_12"] <- "white"
+names(nondelta)[names(nondelta) == "race_14"] <- "none"
 
 rucc <- read.csv("RUCC2023.csv")
 rucc <- rucc[rucc$Attribute == 'RUCC_2023',]
