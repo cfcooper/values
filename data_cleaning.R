@@ -16,6 +16,7 @@ rm(list=ls()) # Caution: this clears the Environment
 fulldat <- read.csv("dataset_numeric.csv")
 
 
+
 col_names <- colnames(fulldat)
 col_positions <- seq_along(col_names)
 col_info <- data.frame(Column = col_names, Position = col_positions)             # to make col reference dataframe
@@ -155,7 +156,11 @@ delta$discount_expend_p <- delta$discount_expend/(delta$income/52)
 delta$smallstore_expend_p <- delta$smallstore_expend/(delta$income/52)
 delta$farmmarket_expend_p <- delta$farmmarket_expend/(delta$income/52)
 delta$directfarm_expend_p <- delta$directfarm_expend/(delta$income/52)
-
+delta$foodbox_expend_p <- delta$foodbox_expend/(delta$income/52)
+delta$mealkit_expend_p <- delta$mealkit_expend/(delta$income/52)
+delta$market_expend_p <- delta$market_expend/(delta$income/52)
+delta$chainrest_expend_p <- delta$chainrest_expend/(delta$income/52)
+delta$localrest_expend_p <- delta$localrest_expend/(delta$income/52)
 
 col_names <- colnames(delta)
 col_positions <- seq_along(col_names)
@@ -254,6 +259,11 @@ nondelta$discount_expend_p <- nondelta$discount_expend/(nondelta$income/52)
 nondelta$smallstore_expend_p <- nondelta$smallstore_expend/(nondelta$income/52)
 nondelta$farmmarket_expend_p <- nondelta$farmmarket_expend/(nondelta$income/52)
 nondelta$directfarm_expend_p <- nondelta$directfarm_expend/(nondelta$income/52)
+nondelta$foodbox_expend_p <- nondelta$foodbox_expend/(nondelta$income/52)
+nondelta$mealkit_expend_p <- nondelta$mealkit_expend/(nondelta$income/52)
+nondelta$market_expend_p <- nondelta$market_expend/(nondelta$income/52)
+nondelta$chainrest_expend_p <- nondelta$chainrest_expend/(nondelta$income/52)
+nondelta$localrest_expend_p <- nondelta$localrest_expend/(nondelta$income/52)
 
 
 col_names <- colnames(nondelta)
@@ -300,7 +310,58 @@ summary_nondelta <- nondelta %>%
     names_sep = "_"
   )
 
+## other demographics ----------------------------------------------------------
 
+delta$hispanic <- if_else(delta$Q6 > 1 & delta$Q6 < 6, 1, 0)
+nondelta$hispanic <- if_else(nondelta$Q6 > 1 & nondelta$Q6 < 6, 1, 0)
+
+
+race_long <- delta %>% separate_rows(Q7, sep = ",")  %>%   # make long data for race
+  mutate(Q7 = as.numeric(Q7))
+
+race_wide <- race_long %>%
+  mutate(value = 1) %>%  # Add a column for binary indicator (1 for presence)
+  pivot_wider(names_from = Q7, values_from = value, 
+              values_fill = 0, names_glue = "race_{Q7}")      # make wide data for race 
+
+race_wide <- race_wide[c("responseID","race_1","race_2","race_3","race_4","race_5","race_6",
+                         "race_10","race_12","race_14")]
+delta <- merge(delta, race_wide, by = "responseID")
+
+
+race_long <- nondelta %>% separate_rows(Q7, sep = ",")  %>%   # make long data for race
+  mutate(Q7 = as.numeric(Q7))
+
+race_wide <- race_long %>%
+  mutate(value = 1) %>%  # Add a column for binary indicator (1 for presence)
+  pivot_wider(names_from = Q7, values_from = value, 
+              values_fill = 0, names_glue = "race_{Q7}")      # make wide data for race 
+
+race_wide <- race_wide[c("responseID","race_1","race_2","race_3","race_4","race_5","race_6",
+                         "race_7","race_8","race_9","race_10","race_11","race_12","race_13","race_14",
+                         "race_15")]
+nondelta <- merge(nondelta, race_wide, by = "responseID")
+
+rucc <- read.csv("RUCC2023.csv")
+rucc <- rucc[rucc$Attribute == 'RUCC_2023',]
+
+
+qualdat <- read.csv("qualitative_dat.csv")
+
+names(qualdat)[names(qualdat) == "Q52_1"] <- "state"
+names(qualdat)[names(qualdat) == "Q52_2"] <- "county"
+qualdat <- qualdat[ -c(1:4) ]
+delta <- merge(delta, qualdat, by = "IPAddress")
+nondelta <- merge(nondelta, qualdat, by = "IPAddress")
+
+zip_fip <- read.csv("zip_fips.csv")
+
+rucc <- merge(rucc, zip_fip, by = "FIPS")
+rucc_merge <- rucc[ c(1,2,3,5,6) ]
+names(rucc_merge)[names(rucc_merge) == "Value"] <- "rucc"
+delta <- merge(delta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
+
+nondelta <- merge(nondelta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
 
 ## write rds files -------------------------------------------------------------
 
