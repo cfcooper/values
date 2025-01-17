@@ -23,6 +23,7 @@ delta$income_weekly <- delta$income/52
 delta$rucc <- as.numeric(delta$rucc)
 nondelta$rucc <- as.numeric(nondelta$rucc)
 
+
 ## value models ---------------------------------------------------------------
 
 affordable <- lm(afford ~ Q8 + Q5 + hispanic + native + black + rucc, data = delta)

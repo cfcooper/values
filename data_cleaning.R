@@ -385,6 +385,16 @@ delta <- merge(delta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","Count
 
 nondelta <- merge(nondelta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
 
+delta$income_same <- ifelse(delta$Q8 == delta$Q9,1,0)
+delta$income_increase <- ifelse(delta$Q8 < delta$Q9,1,0)
+delta$income_decrease <- ifelse(delta$Q8 > delta$Q9,1,0)
+
+
+nondelta$income_same <- ifelse(nondelta$Q8 == nondelta$Q9,1,0)
+nondelta$income_increase <- ifelse(nondelta$Q8 < nondelta$Q9,1,0)
+nondelta$income_decrease <- ifelse(nondelta$Q8 > nondelta$Q9,1,0)
+
+
 ## write rds files -------------------------------------------------------------
 
 delta_factors <- delta_factors[ -c(2:3) ]
