@@ -22,6 +22,8 @@ nondelta$income_weekly <- nondelta$income/52
 delta$income_weekly <- delta$income/52
 delta$rucc <- as.numeric(delta$rucc)
 nondelta$rucc <- as.numeric(nondelta$rucc)
+delta$rural <- ifelse(delta$rucc >= 4, 1, 0)
+nondelta$rural <- ifelse(nondelta$rucc >= 4, 1, 0)
 
 
 ## value models ---------------------------------------------------------------
@@ -462,33 +464,33 @@ write.csv(percent_expend_nondelta, "cleaneddata/regress/percent_income_nondelta.
 ##round 4 delta --------------------------------------------
 regressions <- list(
   lm(supermarketwhole_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(supermarketfood_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(healthfood_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(convenience_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(online_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(discount_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(smallstore_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(farmmarket_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(directfarm_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(foodbox_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(mealkit_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(market_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(chainrest_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(localrest_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta)
+       healthy + social_resp + access + rural + Q5, data = delta)
 )
 
 
@@ -501,7 +503,7 @@ pvalues <- lapply(regressions, function(model) {
 
 pvalue_df <- do.call(rbind, pvalues)
 colnames(pvalue_df) <- c("(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-                         "healthy", "social_resp", "access", "rucc")
+                         "healthy", "social_resp", "access", "rural","Q5")
 pvalue_df <- as.data.frame(pvalue_df)
 
 # Add a column for the regression number
@@ -510,7 +512,7 @@ pvalue_df$Regression <- paste0("Regression_", 1:length(regressions))
 # Arrange the data into a long format where each coefficient is its own column
 pvalue_long <- pvalue_df %>%
   select(Regression, "(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-         "healthy", "social_resp", "access", "rucc") %>%
+         "healthy", "social_resp", "access", "rural", "Q5") %>%
   arrange(Regression)
 
 #adjusted r2
@@ -526,37 +528,59 @@ adjusted_r2_df <- data.frame(
 
 abs_delta <- merge(pvalue_long, adjusted_r2_df)
 
-write.csv(abs_delta, "cleaneddata/regress/abs_delta_r.csv")
+write.csv(abs_delta, "cleaneddata/regress/abs_delta_r2.csv")
+
+# Extract coefficients for each regression
+coefficients <- lapply(regressions, function(model) {
+  coef(model)  # Extract coefficients
+})
+
+coefficient_df <- do.call(rbind, coefficients)
+colnames(coefficient_df) <- c("(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
+                              "healthy", "social_resp", "access", "rural", "Q5")
+coefficient_df <- as.data.frame(coefficient_df)
+
+# Add a column for the regression number
+coefficient_df$Regression <- paste0("Regression_", 1:length(regressions))
+
+# Arrange the data into a long format where each coefficient is its own column
+coeffcient_long <- coefficient_df %>%
+  select(Regression, "(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
+         "healthy", "social_resp", "access", "rural", "Q5") %>%
+  arrange(Regression)
+
+write.csv(coeffcient_long, "cleaneddata/regress/abs_delta_c2.csv")
+
 ##round 4 nondelta --------------------------------------------
 regressions <- list(
   lm(supermarketwhole_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(supermarketfood_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(healthfood_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(convenience_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(online_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(discount_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(smallstore_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(farmmarket_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(directfarm_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(foodbox_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(mealkit_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(market_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(chainrest_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta),
+       healthy + social_resp + access + rural + Q5, data = nondelta),
   lm(localrest_expend ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = nondelta)
+       healthy + social_resp + access + rural + Q5, data = nondelta)
 )
 
 
@@ -569,7 +593,7 @@ pvalues <- lapply(regressions, function(model) {
 
 pvalue_df <- do.call(rbind, pvalues)
 colnames(pvalue_df) <- c("(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-                         "healthy", "social_resp", "access", "rucc")
+                         "healthy", "social_resp", "access", "rural", "Q5")
 pvalue_df <- as.data.frame(pvalue_df)
 
 # Add a column for the regression number
@@ -578,7 +602,7 @@ pvalue_df$Regression <- paste0("Regression_", 1:length(regressions))
 # Arrange the data into a long format where each coefficient is its own column
 pvalue_long <- pvalue_df %>%
   select(Regression, "(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-         "healthy", "social_resp", "access", "rucc") %>%
+         "healthy", "social_resp", "access", "rural", "Q5") %>%
   arrange(Regression)
 
 #adjusted r2
@@ -594,9 +618,28 @@ adjusted_r2_df <- data.frame(
 
 abs_nondelta <- merge(pvalue_long, adjusted_r2_df)
 
-write.csv(abs_nondelta, "cleaneddata/regress/abs_nondelta_r.csv")
+write.csv(abs_nondelta, "cleaneddata/regress/abs_nondelta_r2.csv")
 
+# Extract coefficients for each regression
+coefficients <- lapply(regressions, function(model) {
+  coef(model)  # Extract coefficients
+})
 
+coefficient_df <- do.call(rbind, coefficients)
+colnames(coefficient_df) <- c("(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
+                         "healthy", "social_resp", "access", "rural", "Q5")
+coefficient_df <- as.data.frame(coefficient_df)
+
+# Add a column for the regression number
+coefficient_df$Regression <- paste0("Regression_", 1:length(regressions))
+
+# Arrange the data into a long format where each coefficient is its own column
+coeffcient_long <- coefficient_df %>%
+  select(Regression, "(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
+         "healthy", "social_resp", "access", "rural", "Q5") %>%
+  arrange(Regression)
+
+write.csv(coeffcient_long, "cleaneddata/regress/abs_nondelta_c2.csv")
 
 
 
@@ -672,33 +715,33 @@ write.csv(abs_nondelta, "cleaneddata/regress/abs_nondelta_r2.csv")
 ##round 5 delta --------------------------------------------
 regressions <- list(
   lm(supermarketwhole_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(supermarketfood_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(healthfood_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(convenience_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(online_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(discount_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(smallstore_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(farmmarket_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(directfarm_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(foodbox_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(mealkit_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(market_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(chainrest_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta),
+       healthy + social_resp + access + rural + Q5, data = delta),
   lm(localrest_expend_t ~ income_weekly + locally_grown + organic + local_econ + afford +
-       healthy + social_resp + access + rucc, data = delta)
+       healthy + social_resp + access + rural + Q5, data = delta)
 )
 
 
@@ -711,7 +754,7 @@ pvalues <- lapply(regressions, function(model) {
 
 pvalue_df <- do.call(rbind, pvalues)
 colnames(pvalue_df) <- c("(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-                         "healthy", "social_resp", "access","rucc")
+                         "healthy", "social_resp", "access","rural","Q5")
 pvalue_df <- as.data.frame(pvalue_df)
 
 # Add a column for the regression number
@@ -720,7 +763,7 @@ pvalue_df$Regression <- paste0("Regression_", 1:length(regressions))
 # Arrange the data into a long format where each coefficient is its own column
 pvalue_long <- pvalue_df %>%
   select(Regression, "(Intercept)", "income_weekly", "locally_grown", "organic", "local_econ", "afford",
-         "healthy", "social_resp", "access","rucc") %>%
+         "healthy", "social_resp", "access","rural","Q5") %>%
   arrange(Regression)
 
 
@@ -738,6 +781,7 @@ adjusted_r2_df <- data.frame(
 percent_expend_delta <- merge(pvalue_long, adjusted_r2_df)
 
 write.csv(percent_expend_delta, "cleaneddata/regress/percent_expend_delta_r.csv")
+
 
 
 ##round 5 nondelta --------------------------------------------

@@ -114,3 +114,33 @@ summary(access)
 
 
 
+
+
+## value breakdown
+
+delta_values <- subset(delta, select = c(1,151:166))
+delta_values %<>% mutate(t2 = fv_top_three_factors) %>% separate_rows(fv_top_three_factors, sep = ",")
+
+values_sum <- delta_values %>% group_by(fv_top_three_factors) %>%
+  summarise(count = n())
+names(values_sum)[names(values_sum) == "count"] <- "delta_count"
+
+nondelta_values <- subset(nondelta, select = c(4,151:166))
+nondelta_values %<>% mutate(t2 = fv_top_three_factors) %>% separate_rows(fv_top_three_factors, sep = ",")
+
+nd_values_sum <- nondelta_values %>% group_by(fv_top_three_factors) %>%
+  summarise(count = n())
+names(nd_values_sum)[names(nd_values_sum) == "count"] <- "nondelta_count"
+
+values_sum <- merge(values_sum, nd_values_sum)
+
+write.csv(values_sum, "cleaneddata/values_summary.csv")
+
+
+## expenditure details ---------------------------------------------
+
+delta_expend <- subset(delta, select = c(1,176:177,234))
+delta_expend$percent <- delta_expend$sum_expend/delta_expend$income_weekly
+mean(delta_expend$percent)
+
+
