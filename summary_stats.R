@@ -60,6 +60,52 @@ sd(nondelta$mealkit_expend)
 mean(nondelta$market_expend)
 sd(nondelta$market_expend)
 
+
+## expend mean (delta) -----------------------------------------------------------
+mean(delta$supermarketwhole_expend)
+sd(delta$supermarketwhole_expend)
+
+class(nondelta$supermarketwhole_expend)
+
+mean(delta$supermarketfood_expend)
+sd(delta$supermarketfood_expend)
+
+mean(delta$healthfood_expend)
+sd(delta$healthfood_expend)
+
+mean(delta$convenience_expend)
+sd(delta$convenience_expend)
+
+mean(delta$online_expend)
+sd(delta$online_expend)
+
+mean(delta$discount_expend)
+sd(delta$discount_expend)
+
+mean(delta$smallstore_expend)
+sd(delta$smallstore_expend)
+
+mean(delta$farmmarket_expend)
+sd(delta$farmmarket_expend)
+
+mean(delta$directfarm_expend)
+sd(delta$directfarm_expend)
+
+mean(delta$foodbox_expend)
+sd(delta$foodbox_expend)
+
+mean(delta$mealkit_expend)
+sd(delta$mealkit_expend)
+
+mean(delta$market_expend)
+sd(delta$market_expend)
+
+mean(delta$chainrest_expend)
+sd(delta$chainrest_expend)
+
+mean(delta$localrest_expend)
+sd(delta$localrest_expend)
+
 ## demographics  -----------------------------------------------------------
 
 mean(nondelta$chainrest_expend)
@@ -143,4 +189,31 @@ delta_expend <- subset(delta, select = c(1,176:177,234))
 delta_expend$percent <- delta_expend$sum_expend/delta_expend$income_weekly
 mean(delta_expend$percent)
 
+columns_to_consider <- c(54:68)
+
+delta$num_channel <- apply(delta[c(54:68)], 1, function(row) sum(row > 0))
+
+
+## likert scale details ---------------------------------------------
+
+nondelta_likert <- subset(nondelta, select = c(4,151:159))
+mean(nondelta_likert$Q21_1)
+mean(nondelta_likert$Q21_2)
+mean(nondelta_likert$Q21_12)
+mean(nondelta_likert$Q21_13)
+mean(nondelta_likert$Q21_14)
+mean(nondelta_likert$Q21_16)
+mean(nondelta_likert$Q21_15)
+mean(nondelta_likert$Q22_6)
+mean(nondelta_likert$Q22_8)
+
+sd(nondelta_likert$Q21_1)
+sd(nondelta_likert$Q21_2)
+sd(nondelta_likert$Q21_12)
+sd(nondelta_likert$Q21_13)
+sd(nondelta_likert$Q21_14)
+sd(nondelta_likert$Q21_16)
+sd(nondelta_likert$Q21_15)
+sd(nondelta_likert$Q22_6)
+sd(nondelta_likert$Q22_8)
 

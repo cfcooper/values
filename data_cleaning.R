@@ -17,7 +17,7 @@ fulldat <- read.csv("dataset_numeric.csv")
 
 
 
-col_names <- colnames(fulldat)
+col_names <- colnames(delta)
 col_positions <- seq_along(col_names)
 col_info <- data.frame(Column = col_names, Position = col_positions)             # to make col reference dataframe
 
