@@ -39,10 +39,35 @@ delta$healthfood_expend <- as.integer(delta$healthfood_expend)
 delta_sum <- delta %>% group_by(Q8) %>%
   summarise(count = n())
 
+delta$region_Delta <- 1
+nondelta$region_Delta <- 0
+
+
+rbind.match.columns <- function(input1, input2) {
+  n.input1 <- ncol(input1)
+  n.input2 <- ncol(input2)
+  
+  if (n.input2 < n.input1) {
+    TF.names <- which(names(input2) %in% names(input1))
+    column.names <- names(input2[, TF.names])
+  } else {
+    TF.names <- which(names(input1) %in% names(input2))
+    column.names <- names(input1[, TF.names])
+  }
+  
+  return(rbind(input1[, column.names], input2[, column.names]))
+}
+
+fulldata <- rbind.match.columns(delta, nondelta)
+
+fulldata$healthfood_expend <- as.integer(fulldata$healthfood_expend)
+
+
+
 # models
 
-m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic | rucc + Q8, data = delta, dist = "negbin")
-
+m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + region_Delta | rucc + Q8 + region_Delta, data = fulldata, dist = "negbin")
+summary(m1)
 
 # non delta -------------------------------------------------
 
