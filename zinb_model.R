@@ -21,11 +21,18 @@ rm(list=ls()) # caution: this clears the environment
 
 delta <- readRDS("cleaneddata/delta.rds")
 nondelta <- readRDS("cleaneddata/nondelta.rds")
+zcta <- read.csv("zcta/zip_density.csv")
+
+
+
+nondelta$income_weekly <- nondelta$income/52
+delta$income_weekly <- delta$income/52
+
+
 
 # delta -------------------------------------------------
 
 delta$rucc <- as.factor(delta$rucc)
-delta$Q8 <- as.factor(delta$Q8)
 delta$afford <- as.factor(delta$afford)
 delta$healthy <- as.factor(delta$healthy)
 delta$access <- as.factor(delta$access)
@@ -59,15 +66,24 @@ rbind.match.columns <- function(input1, input2) {
 }
 
 fulldata <- rbind.match.columns(delta, nondelta)
-
+names(fulldata)[names(fulldata) == "Q51"] <- "zip_code"
+fulldata <- merge(fulldata, zcta,sort = FALSE)
+fulldata$zip_code <- as.numeric(fulldata$zip_code)
 fulldata$healthfood_expend <- as.integer(fulldata$healthfood_expend)
-
+fulldata$farmmarket_expend <- as.integer(fulldata$farmmarket_expend)
+fulldata$supermarketwhole_expend <- as.integer(fulldata$supermarketwhole_expend)
 
 
 # models
 
-m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + region_Delta | rucc + Q8 + region_Delta, data = fulldata, dist = "negbin")
+m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_weekly + region_Delta | dense + income_weekly + region_Delta, data = fulldata, dist = "negbin")
 summary(m1)
+
+m2 <- zeroinfl(farmmarket_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_weekly + region_Delta | dense + income_weekly + region_Delta, data = fulldata, dist = "negbin")
+summary(m2)
+
+m3 <- zeroinfl(supermarketwhole_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_weekly + region_Delta | dense + income_weekly + region_Delta, data = fulldata, dist = "negbin")
+summary(m3)
 
 # non delta -------------------------------------------------
 
