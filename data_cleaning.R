@@ -17,7 +17,7 @@ fulldat <- read.csv("dataset_numeric.csv")
 
 
 
-col_names <- colnames(delta)
+col_names <- colnames(fulldat)
 col_positions <- seq_along(col_names)
 col_info <- data.frame(Column = col_names, Position = col_positions)             # to make col reference dataframe
 
@@ -147,39 +147,12 @@ delta <- delta[-which(delta$supermarketfood_expend > sm_food_expend),]
 delta <- delta[-which(delta$convenience_expend > conv_expend),]
 
 
-delta$supermarketwhole_expend_p <- delta$supermarketwhole_expend/(delta$income/52)
-delta$supermarketfood_expend_p <- delta$supermarketfood_expend/(delta$income/52)
-delta$healthfood_expend_p <- delta$healthfood_expend/(delta$income/52)
-delta$convenience_expend_p <- delta$convenience_expend/(delta$income/52)
-delta$online_expend_p <- delta$online_expend/(delta$income/52)
-delta$discount_expend_p <- delta$discount_expend/(delta$income/52)
-delta$smallstore_expend_p <- delta$smallstore_expend/(delta$income/52)
-delta$farmmarket_expend_p <- delta$farmmarket_expend/(delta$income/52)
-delta$directfarm_expend_p <- delta$directfarm_expend/(delta$income/52)
-delta$foodbox_expend_p <- delta$foodbox_expend/(delta$income/52)
-delta$mealkit_expend_p <- delta$mealkit_expend/(delta$income/52)
-delta$market_expend_p <- delta$market_expend/(delta$income/52)
-delta$chainrest_expend_p <- delta$chainrest_expend/(delta$income/52)
-delta$localrest_expend_p <- delta$localrest_expend/(delta$income/52)
 
 col_names <- colnames(delta)
 col_positions <- seq_along(col_names)
 col_info <- data.frame(Column = col_names, Position = col_positions)             # to make col reference dataframe
 
-delta$supermarketwhole_expend_t <- delta$supermarketwhole_expend/delta$sum_expend
-delta$supermarketfood_expend_t <- delta$supermarketfood_expend/delta$sum_expend
-delta$healthfood_expend_t <- delta$healthfood_expend/delta$sum_expend
-delta$convenience_expend_t <- delta$convenience_expend/delta$sum_expend
-delta$online_expend_t <- delta$online_expend/delta$sum_expend
-delta$discount_expend_t <- delta$discount_expend/delta$sum_expend
-delta$smallstore_expend_t <- delta$smallstore_expend/delta$sum_expend
-delta$farmmarket_expend_t <- delta$farmmarket_expend/delta$sum_expend
-delta$directfarm_expend_t <- delta$directfarm_expend/delta$sum_expend
-delta$foodbox_expend_t <- delta$foodbox_expend/delta$sum_expend
-delta$mealkit_expend_t <- delta$mealkit_expend/delta$sum_expend
-delta$market_expend_t <- delta$market_expend/delta$sum_expend
-delta$chainrest_expend_t <- delta$chainrest_expend/delta$sum_expend
-delta$localrest_expend_t <- delta$localrest_expend/delta$sum_expend
+
 
 #supermarketwhole <- delta[ c(4,186) ]
 #delta_expend <- delta[ c(4,52:60) ]
@@ -250,41 +223,10 @@ nondelta <- nondelta[-which(nondelta$supermarketfood_expend > sm_food_expend),]
 nondelta <- nondelta[-which(nondelta$convenience_expend > conv_expend),]
 
 
-nondelta$supermarketwhole_expend_p <- nondelta$supermarketwhole_expend/(nondelta$income/52)
-nondelta$supermarketfood_expend_p <- nondelta$supermarketfood_expend/(nondelta$income/52)
-nondelta$healthfood_expend_p <- nondelta$healthfood_expend/(nondelta$income/52)
-nondelta$convenience_expend_p <- nondelta$convenience_expend/(nondelta$income/52)
-nondelta$online_expend_p <- nondelta$online_expend/(nondelta$income/52)
-nondelta$discount_expend_p <- nondelta$discount_expend/(nondelta$income/52)
-nondelta$smallstore_expend_p <- nondelta$smallstore_expend/(nondelta$income/52)
-nondelta$farmmarket_expend_p <- nondelta$farmmarket_expend/(nondelta$income/52)
-nondelta$directfarm_expend_p <- nondelta$directfarm_expend/(nondelta$income/52)
-nondelta$foodbox_expend_p <- nondelta$foodbox_expend/(nondelta$income/52)
-nondelta$mealkit_expend_p <- nondelta$mealkit_expend/(nondelta$income/52)
-nondelta$market_expend_p <- nondelta$market_expend/(nondelta$income/52)
-nondelta$chainrest_expend_p <- nondelta$chainrest_expend/(nondelta$income/52)
-nondelta$localrest_expend_p <- nondelta$localrest_expend/(nondelta$income/52)
-
 
 col_names <- colnames(nondelta)
 col_positions <- seq_along(col_names)
 col_info <- data.frame(Column = col_names, Position = col_positions)             # to make col reference dataframe
-
-nondelta$supermarketwhole_expend_t <- nondelta$supermarketwhole_expend/nondelta$sum_expend
-nondelta$supermarketfood_expend_t <- nondelta$supermarketfood_expend/nondelta$sum_expend
-nondelta$healthfood_expend_t <- nondelta$healthfood_expend/nondelta$sum_expend
-nondelta$convenience_expend_t <- nondelta$convenience_expend/nondelta$sum_expend
-nondelta$online_expend_t <- nondelta$online_expend/nondelta$sum_expend
-nondelta$discount_expend_t <- nondelta$discount_expend/nondelta$sum_expend
-nondelta$smallstore_expend_t <- nondelta$smallstore_expend/nondelta$sum_expend
-nondelta$farmmarket_expend_t <- nondelta$farmmarket_expend/nondelta$sum_expend
-nondelta$directfarm_expend_t <- nondelta$directfarm_expend/nondelta$sum_expend
-nondelta$foodbox_expend_t <- nondelta$foodbox_expend/nondelta$sum_expend
-nondelta$mealkit_expend_t <- nondelta$mealkit_expend/nondelta$sum_expend
-nondelta$market_expend_t <- nondelta$market_expend/nondelta$sum_expend
-nondelta$chainrest_expend_t <- nondelta$chainrest_expend/nondelta$sum_expend
-nondelta$localrest_expend_t <- nondelta$localrest_expend/nondelta$sum_expend
-
 
 nondelta$rural <- if_else(nondelta$Q101 == 1, 1, 0)
 nondelta$urban <- if_else(nondelta$Q101 == 3, 1, 0)
@@ -294,21 +236,6 @@ nondelta_factors <- nondelta_factors[ -c(2:3) ]
 nondelta <- merge(nondelta, nondelta_factors, by = "responseID")
 
 
-
-summary_nondelta <- nondelta %>%
-  select(ends_with("_expend")) %>%  # Select columns ending with "_expend"
-  summarise(
-    across(
-      everything(), 
-      list(mean = ~ mean(.), sd = ~ sd(.)), 
-      .names = "{.col}_{.fn}"
-    )
-  ) %>%
-  pivot_longer(
-    cols = everything(),
-    names_to = c("column", ".value"),
-    names_sep = "_"
-  )
 
 ## other demographics ----------------------------------------------------------
 
@@ -364,8 +291,8 @@ names(nondelta)[names(nondelta) == "race_11"] <- "vietnamese"
 names(nondelta)[names(nondelta) == "race_12"] <- "white"
 names(nondelta)[names(nondelta) == "race_14"] <- "none"
 
-rucc <- read.csv("RUCC2023.csv")
-rucc <- rucc[rucc$Attribute == 'RUCC_2023',]
+#rucc <- read.csv("RUCC2023.csv")
+#rucc <- rucc[rucc$Attribute == 'RUCC_2023',]
 
 
 qualdat <- read.csv("qualitative_dat.csv")
@@ -376,14 +303,14 @@ qualdat <- qualdat[ -c(1:4) ]
 delta <- merge(delta, qualdat, by = "IPAddress")
 nondelta <- merge(nondelta, qualdat, by = "IPAddress")
 
-zip_fip <- read.csv("zip_fips.csv")
+#zip_fip <- read.csv("zip_fips.csv")
 
-rucc <- merge(rucc, zip_fip, by = "FIPS")
-rucc_merge <- rucc[ c(1,2,3,5,6) ]
-names(rucc_merge)[names(rucc_merge) == "Value"] <- "rucc"
-delta <- merge(delta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
+#rucc <- merge(rucc, zip_fip, by = "FIPS")
+#rucc_merge <- rucc[ c(1,2,3,5,6) ]
+#names(rucc_merge)[names(rucc_merge) == "Value"] <- "rucc"
+#delta <- merge(delta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
 
-nondelta <- merge(nondelta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
+#nondelta <- merge(nondelta,rucc_merge, by.x = c("Q51","county"), by.y = c("ZIP","County_Name"))
 
 delta$income_same <- ifelse(delta$Q8 == delta$Q9,1,0)
 delta$income_increase <- ifelse(delta$Q8 < delta$Q9,1,0)
