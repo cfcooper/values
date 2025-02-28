@@ -1,0 +1,52 @@
+division,state,region,postal,state_num,CPI,adj_CPI
+East North Central,Illinois,Midwest,IL,14,122.536,1.002626519
+East North Central,Indiana,Midwest,IN,15,122.536,1.002626519
+East North Central,Michigan,Midwest,MI,23,122.536,1.002626519
+East North Central,Ohio,Midwest,OH,36,122.536,1.002626519
+East North Central,Wisconsin,Midwest,WI,51,122.536,1.002626519
+East South Central,Kentucky,South,KY,18,122.639,1.003469296
+East South Central,Alabama,South,AL,1,122.639,1.003469296
+East South Central,Mississippi,South,MS,25,122.639,1.003469296
+East South Central,Tennessee,South,TN,44,122.639,1.003469296
+Middle Atlantic,Pennsylvania,Northeast,PA,39,120.582,0.986638301
+Middle Atlantic,New Jersey,Northeast,NJ,31,120.582,0.986638301
+Middle Atlantic,New York,Northeast,NY,33,120.582,0.986638301
+Mountain,Arizona,West,AZ,3,128.566,1.051965798
+Mountain,Montana,West,MT,27,128.566,1.051965798
+Mountain,Colorado,West,CO,6,128.566,1.051965798
+Mountain,New Mexico,West,NM,32,128.566,1.051965798
+Mountain,Idaho,West,ID,13,128.566,1.051965798
+Mountain,Utah,West,UT,46,128.566,1.051965798
+Mountain,Nevada,West,NV,29,128.566,1.051965798
+Mountain,Wyoming,West,WY,52,128.566,1.051965798
+New England,Maine,Northeast,ME,20,119.682,0.97927423
+New England,Massachusetts,Northeast,MA,22,119.682,0.97927423
+New England,New Hampshire,Northeast,NH,30,119.682,0.97927423
+New England,Connecticut,Northeast,CT,7,119.682,0.97927423
+New England,Vermont,Northeast,VT,47,119.682,0.97927423
+New England,Rhode Island,Northeast,RI,41,119.682,0.97927423
+Pacific,Alaska,West,AK,2,123.761,1.012649838
+Pacific,Oregon,West,OR,38,123.761,1.012649838
+Pacific,California,West,CA,5,123.761,1.012649838
+Pacific,Washington,West,WA,49,123.761,1.012649838
+Pacific,Hawaii,West,HI,12,123.761,1.012649838
+South Atlantic,District of Columbia,South,DC,9,125.822,1.029513562
+South Atlantic,Maryland,South,MD,21,125.822,1.029513562
+South Atlantic,Virginia,South,VA,48,125.822,1.029513562
+South Atlantic,Delaware,South,DE,8,125.822,1.029513562
+South Atlantic,Florida,South,FL,10,125.822,1.029513562
+South Atlantic,Georgia,South,GA,11,125.822,1.029513562
+South Atlantic,West Virginia,South,WV,50,125.822,1.029513562
+South Atlantic,South Carolina,South,SC,42,125.822,1.029513562
+South Atlantic,North Carolina,South,NC,34,125.822,1.029513562
+West North Central,Iowa,Midwest,IA,16,122.935,1.005891257
+West North Central,Missouri,Midwest,MO,26,122.935,1.005891257
+West North Central,North Dakota,Midwest,ND,35,122.935,1.005891257
+West North Central,Minnesota,Midwest,MN,24,122.935,1.005891257
+West North Central,South Dakota,Midwest,SD,43,122.935,1.005891257
+West North Central,Kansas,Midwest,KS,17,122.935,1.005891257
+West North Central,Nebraska,Midwest,NE,28,122.935,1.005891257
+West South Central,Oklahoma,South,OK,37,122.215,1
+West South Central,Texas,South,TX,45,122.215,1
+West South Central,Louisiana,South,LA,19,122.215,1
+West South Central,Arkansas,South,AR,4,122.215,1
