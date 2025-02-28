@@ -1,10 +1,10 @@
-﻿division,CPI
-East North Central,122.536
-East South Central,122.639
-Middle Atlantic,120.582
-Mountain,128.566
-New England,119.682
-Pacific,123.761
-South Atlantic,125.822
-West North Central,122.935
-West South Central,122.215
+﻿division,CPI,adj_CPI
+East North Central,122.536,0.997380362
+East South Central,122.639,0.996542698
+Middle Atlantic,120.582,1.013542651
+Mountain,128.566,0.950601248
+New England,119.682,1.021164419
+Pacific,123.761,0.987508181
+South Atlantic,125.822,0.971332517
+West North Central,122.935,0.994143246
+West South Central,122.215,1
