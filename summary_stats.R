@@ -9,6 +9,7 @@ library(ggplot2)
 library(reshape)
 library(magrittr)
 library(formattable)
+library(ggpubr)
 
 
 rm(list=ls()) # caution: this clears the environment
@@ -23,6 +24,9 @@ delta$income_weekly <- delta$income/52
 
 delta$rucc <- as.numeric(delta$rucc)
 nondelta$rucc <- as.numeric(nondelta$rucc)
+
+
+
 ## expend mean -----------------------------------------------------------
 mean(nondelta$supermarketwhole_expend)
 sd(nondelta$supermarketwhole_expend)

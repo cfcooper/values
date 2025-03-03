@@ -87,6 +87,12 @@ fulldata$mealkit_expend <- as.integer(fulldata$mealkit_expend)
 
 
 
+res <- cor.test(fulldata$rural, fulldata$region_Delta, method = "pearson")
+res
+
+res2 <- cor.test(fulldata$rural, fulldata$region_Delta, method = "kendall")
+res2
+
 # models
 
 m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_weekly + region_Delta + CPI | rural + income_weekly + region_Delta, data = fulldata, dist = "negbin")
@@ -97,6 +103,22 @@ summary(m2)
 
 m3 <- zeroinfl(supermarketwhole_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_weekly + region_Delta + CPI | rural + income_weekly + region_Delta, data = fulldata, dist = "negbin")
 summary(m3)
+
+
+
+# Access coefficients
+
+coefficients_count <- summary(m6)$coefficients$count[, "Estimate"]  # Coefficients for the count model
+
+coefficients_zero <- summary(m6)$coefficients$zero[, "Estimate"]  # Coefficients for the zero-inflation model
+
+
+
+# Export coefficients (e.g., to a CSV)
+
+write.csv(data.frame(variable = names(coefficients_count), count_coef = coefficients_count, zero_coef = coefficients_zero), file = "zinb_coefficients.csv", row.names = FALSE)
+
+
 
 m4 <- zeroinfl(supermarketfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_weekly + region_Delta + CPI | rural + income_weekly + region_Delta, data = fulldata, dist = "negbin")
 summary(m4)
