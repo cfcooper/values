@@ -104,9 +104,9 @@ summary(m3)
 
 # Access coefficients
 
-coefficients_count <- summary(m2)$coefficients$count[, "Estimate"]  # Coefficients for the count model
+coefficients_count <- summary(m10)$coefficients$count[, "Estimate"]  # Coefficients for the count model
 
-coefficients_zero <- summary(m2)$coefficients$zero[, "Estimate"]  # Coefficients for the zero-inflation model
+coefficients_zero <- summary(m10)$coefficients$zero[, "Estimate"]  # Coefficients for the zero-inflation model
 
 
 
@@ -140,27 +140,9 @@ summary(m10)
 m11 <- zeroinfl(mealkit_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
 summary(m11)
 
-# non delta -------------------------------------------------
+# interaction model test -------------------------------------------------
 
-nondelta$rucc <- as.factor(nondelta$rucc)
-nondelta$Q8 <- as.factor(nondelta$Q8)
-nondelta$afford <- as.factor(nondelta$afford)
-nondelta$healthy <- as.factor(nondelta$healthy)
-nondelta$access <- as.factor(nondelta$access)
-nondelta$locally_grown <- as.factor(nondelta$locally_grown)
-nondelta$local_econ <- as.factor(nondelta$local_econ)
-nondelta$social_resp <- as.factor(nondelta$social_resp)
-nondelta$organic <- as.factor(nondelta$organic)
-
-nondelta$healthfood_expend <- as.integer(nondelta$healthfood_expend)
-
-# models
-
-m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic | rucc + Q8, data = nondelta, dist = "negbin")
-summary(m1)
-
-
-e(-.1926)
-
-
+a1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta + income_adj*region_Delta | 
+                 rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+summary(a1)
 
