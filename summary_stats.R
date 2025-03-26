@@ -22,8 +22,8 @@ nondelta <- readRDS("cleaneddata/nondelta.rds")
 nondelta$income_weekly <- nondelta$income/52
 delta$income_weekly <- delta$income/52
 
-delta$rucc <- as.numeric(delta$rucc)
-nondelta$rucc <- as.numeric(nondelta$rucc)
+#delta$rucc <- as.numeric(delta$rucc)
+#nondelta$rucc <- as.numeric(nondelta$rucc)
 
 
 
@@ -118,8 +118,16 @@ sd(nondelta$chainrest_expend)
 mean(nondelta$localrest_expend)
 sd(nondelta$localrest_expend)
 
+nondelta$Q50 <- as.numeric(nondelta$Q50)
+nondelta <- nondelta[complete.cases(nondelta[ , 167]),]
+mean(nondelta$Q50)
+
+delta <- nondelta[complete.cases(delta[ , 167]),]
+mean(delta$Q50)
+
+
 ## demo vs values
-affordable <- lm(afford ~ Q9 + Q5 + hispanic + native + black + rucc + income_increase + income_decrease, data = nondelta)
+affordable <- lm(afford ~ Q9 + Q5 + hispanic + native + black + rural + income_increase + income_decrease, data = nondelta)
 summary(affordable)
 
 affordable <- lm(afford ~ Q9 + Q48 + Q5 + hispanic + native + black + rucc, data = nondelta)
@@ -128,7 +136,7 @@ summary(affordable)
 health <- lm(healthy ~ Q9 + Q48 + Q5 + hispanic + native + black + rucc, data = nondelta)
 summary(health)
 
-local_grown <- lm(locally_grown ~ Q9 + Q48 + Q5 + hispanic + rucc + income_increase + income_decrease, data = nondelta)
+local_grown <- lm(locally_grown ~ Q9 + Q48 + Q5 + hispanic + rural + income_increase + income_decrease, data = nondelta)
 summary(local_grown)
 
 local_econ <- lm(local_econ ~ Q9 + Q48 + Q5 + hispanic + native + black + rucc, data = nondelta)
@@ -137,7 +145,7 @@ summary(local_econ)
 access <- lm(access ~ Q9 + Q48 + Q5 + hispanic + native + black + rucc, data = nondelta)
 summary(access)
 
-organic <- lm(organic ~ Q9 + Q5 + hispanic + native + black + rucc + income_increase + income_decrease, data = delta)
+organic <- lm(organic ~ Q9 + Q5 + hispanic + native + black + rural + income_increase + income_decrease, data = delta)
 summary(organic)
 
 # delta version
