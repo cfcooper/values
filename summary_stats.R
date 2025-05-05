@@ -25,6 +25,28 @@ delta$income_weekly <- delta$income/52
 #delta$rucc <- as.numeric(delta$rucc)
 #nondelta$rucc <- as.numeric(nondelta$rucc)
 
+mergedat <- merge(delta,nondelta, all = TRUE)
+## sig tests -----------------
+
+prop.test(mergedat$locally_grown, mergedat$region_Delta, p = NULL, alternative = "two.sided",
+          correct = TRUE)
+
+## sig test for likert -----------------
+
+t.test( formula = Q21_1 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q21_2 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q21_12 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q21_13 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q21_14 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q21_15 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q21_16 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q22_6 ~ region_Delta, data = mergedat, var.equal = TRUE )
+t.test( formula = Q22_8 ~ region_Delta, data = mergedat, var.equal = TRUE )
+
+mergedat$comma <- str_count(mergedat$fv_top_three_factors, ",")
+comma_count <- mergedat %>% group_by(comma) %>%
+  summarise(count = n())
+
 
 
 ## expend mean -----------------------------------------------------------

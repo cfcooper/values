@@ -1,0 +1,15 @@
+"","variable","zeros","nonzeros"
+"1","supermarketwhole_expend",7866,31743
+"2","supermarketfood_expend",13428,26181
+"3","healthfood_expend",30915,8694
+"4","convenience_expend",25083,14526
+"5","online_expend",27657,11952
+"6","discount_expend",20223,19386
+"7","smallstore_expend",28755,10854
+"8","farmmarket_expend",33228,6381
+"9","directfarm_expend",36684,2925
+"10","foodbox_expend",36927,2682
+"11","mealkit_expend",35505,4104
+"12","market_expend",28575,11034
+"13","chainrest_expend",17271,22338
+"14","localrest_expend",20925,18684
