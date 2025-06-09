@@ -1,13 +1,12 @@
 
 ## zinb model ##
 
-
 library(tidyr) 
 library(dplyr)
 #library(ggplot2)
-library(reshape)
+#library(reshape)
 library(magrittr)
-library(formattable)
+#library(formattable)
 library(MASS)
 library(pscl)
 library(boot)
@@ -19,61 +18,223 @@ rm(list=ls()) # caution: this clears the environment
 ## read in dataframes -----------------------------------------------------------
 
 fulldata <- readRDS("fulldata.rds")
+fulldata <- fulldata[!is.na(fulldata$hh_size), ]
+fulldata <- fulldata[!is.na(fulldata$rural), ]
+
+fulldata$market_expend <- as.integer(fulldata$market_expend)
+fulldata$Q5 <- as.numeric(fulldata$Q5)
 
 
-# models ---------------------------------------------
+corrmatrix <- subset(fulldata, select = c(rural,income_weekly,hh_size,Q5))
+cor(corrmatrix)
+summary(fulldata$income_adj)
 
-m1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+fulldata$Q5 <- as.factor(fulldata$Q5)
+summary(fulldata$Q5)
+
+# models 1 ---------------------------------------------
+
+
+m1 <- zeroinfl(supermarketwhole_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m1)
 
-m2 <- zeroinfl(farmmarket_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+m2 <- zeroinfl(supermarketfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m2)
 
-m3 <- zeroinfl(supermarketwhole_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+
+m3 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m3)
 
 
-
-
-# Access coefficients
-
-coefficients_count <- summary(m9)$coefficients$count[, "Estimate"]  # Coefficients for the count model
-
-coefficients_zero <- summary(m9)$coefficients$zero[, "Estimate"]  # Coefficients for the zero-inflation model
-
-
-
-# Export coefficients (e.g., to a CSV)
-
-write.csv(data.frame(variable = names(coefficients_count), count_coef = coefficients_count), file = "zinb_coefficients.csv", row.names = FALSE)
-write.csv(data.frame(variable = names(coefficients_zero), count_coef = coefficients_zero), file = "zinb_coefficients.csv", row.names = FALSE)
-
-
-m4 <- zeroinfl(supermarketfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+m4 <- zeroinfl(convenience_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m4)
 
-m5 <- zeroinfl(convenience_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+
+m5 <- zeroinfl(online_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m5)
 
-m6 <- zeroinfl(online_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+m6 <- zeroinfl(discount_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m6)
 
-m7 <- zeroinfl(discount_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+
+m7 <- zeroinfl(smallstore_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m7)
 
-m8 <- zeroinfl(smallstore_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+
+m8 <- zeroinfl(farmmarket_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m8)
 
-m9 <- zeroinfl(directfarm_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+
+m9 <- zeroinfl(directfarm_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m9)
 
-m10 <- zeroinfl(foodbox_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+m10 <- zeroinfl(foodbox_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m10)
 
-m11 <- zeroinfl(mealkit_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta | rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
+m11 <- zeroinfl(mealkit_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                  income_weekly + rural + Q5 |
+                  Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                  Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
 summary(m11)
 
-# zeros vs non zeros
+m12 <- zeroinfl(market_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                  income_weekly + rural + Q5 |
+                  Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                  Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m12)
+
+for (i in 1:12) {
+  model <- get(paste0("m", i))  # Access model by name (e.g., m1, m2, ..., m12)
+  
+  # Extract coefficients
+  coefficients_count <- summary(model)$coefficients$count[, "Estimate"]
+  coefficients_zero <- summary(model)$coefficients$zero[, "Estimate"]
+  
+  # Create data frames
+  df_count <- data.frame(variable = names(coefficients_count), count_coef = coefficients_count)
+  df_zero <- data.frame(variable = names(coefficients_zero), zero_coef = coefficients_zero)
+  
+  # Save to CSV files
+  write.csv(df_count, file = paste0("cleaneddata/zinb_model_", i, "_count.csv"), row.names = FALSE)
+  write.csv(df_zero, file = paste0("cleaneddata/zinb_model_", i, "_zero.csv"), row.names = FALSE)
+}
+
+
+
+# models 2 ---------------------------------------------
+
+
+m1 <- zeroinfl(supermarketwhole_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m1)
+
+m2 <- zeroinfl(supermarketfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size  |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m2)
+
+
+m3 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m3)
+
+
+m4 <- zeroinfl(convenience_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m4)
+
+
+m5 <- zeroinfl(online_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m5)
+
+m6 <- zeroinfl(discount_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m6)
+
+
+m7 <- zeroinfl(smallstore_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m7)
+
+
+m8 <- zeroinfl(farmmarket_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m8)
+
+
+m9 <- zeroinfl(directfarm_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                 income_weekly + rural + Q5 + hh_size |
+                 Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                 Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m9)
+
+m10 <- zeroinfl(foodbox_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                  income_weekly + rural + Q5 + hh_size |
+                  Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                  Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m10)
+
+m11 <- zeroinfl(mealkit_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                  income_weekly + rural + Q5 + hh_size |
+                  Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                  Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m11)
+
+m12 <- zeroinfl(market_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + 
+                  income_weekly + rural + Q5 + hh_size |
+                  Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + NorthCentral +
+                  Northwest + RioGrande + Southeast + Southwest + rural, data = fulldata, dist = "negbin")
+summary(m12)
+
+for (i in 1:12) {
+  model <- get(paste0("m", i))  # Access model by name (e.g., m1, m2, ..., m12)
+  
+  # Extract coefficients
+  coefficients_count <- summary(model)$coefficients$count[, "Estimate"]
+  coefficients_zero <- summary(model)$coefficients$zero[, "Estimate"]
+  
+  # Create data frames
+  df_count <- data.frame(variable = names(coefficients_count), count_coef = coefficients_count)
+  df_zero <- data.frame(variable = names(coefficients_zero), zero_coef = coefficients_zero)
+  
+  # Save to CSV files
+  write.csv(df_count, file = paste0("cleaneddata/3zinb_model_", i, "_count.csv"), row.names = FALSE)
+  write.csv(df_zero, file = paste0("cleaneddata/3zinb_model_", i, "_zero.csv"), row.names = FALSE)
+}
+
+
+age <- fulldata %>% group_by(Q5) %>%
+  summarise(expend = mean(sum_expend))
+
+remotearea <- fulldata[!fulldata$RemoteAreas == 0, ]
+
+# zeros vs non zeros ------------------------------------
 
 cols <- 52:65  # the expend columns
 expend_data <- fulldata[, cols]
@@ -122,9 +283,7 @@ alpha_df <- data.frame(
 alpha_df <- alpha_df[order(alpha_df$model), ]
 write.csv(alpha_df, "cleaneddata/alpha_df.csv")
 
-# interaction model test -------------------------------------------------
 
-a1 <- zeroinfl(healthfood_expend ~ afford + healthy + access + locally_grown + local_econ + social_resp + organic + income_adj + region_Delta + income_adj*region_Delta | 
-                 rural + income_adj + region_Delta, data = fulldata, dist = "negbin")
-summary(a1)
+
+
 

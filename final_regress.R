@@ -89,9 +89,12 @@ fulldata$smallstore_expend <- as.integer(fulldata$smallstore_expend)
 fulldata$directfarm_expend <- as.integer(fulldata$directfarm_expend)
 fulldata$foodbox_expend <- as.integer(fulldata$foodbox_expend)
 fulldata$mealkit_expend <- as.integer(fulldata$mealkit_expend)
+fulldata$market_expend <- as.integer(fulldata$market_expend)
 
 fulldata$income_adj <- fulldata$income_weekly/fulldata$adj_CPI
 fulldata$hh_size <- as.numeric(fulldata$Q49)
+
+
 
 # Create binary columns for 'region'
 region_dummies <- model.matrix(~ region - 1, data = fulldata)
@@ -100,11 +103,54 @@ region_dummies <- model.matrix(~ region - 1, data = fulldata)
 colnames(region_dummies) <- gsub("region", "", colnames(region_dummies))
 
 # Combine binary columns with original data, excluding the original 'region' column
-fulldata <- cbind(fulldata[ , !(names(fulldata) %in% "region")], region_dummies)
+fulldata <- cbind(fulldata, region_dummies)
 
 saveRDS(fulldata, "fulldata.rds")
 
 
+test <- lm(supermarketwhole_expend ~ income_weekly + hh_size + rural + 
+     locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
+     Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
+     Northwest + RioGrande + Southeast + Southwest, data = fulldata)
+summary(test)
+
+
+
+
+# expend tables -----------
+
+fulldata$Q5 <- as.factor(fulldata$Q5)
+
+sum_age_expend <- fulldata %>% group_by(Q5) %>%
+  summarise(ch_1 = mean(supermarketwhole_expend),
+            ch_2 = mean(supermarketfood_expend),
+            ch_3 = mean(healthfood_expend),
+            ch_4 = mean(convenience_expend),
+            ch_5 = mean(online_expend),
+            ch_6 = mean(discount_expend),
+            ch_7 = mean(smallstore_expend),
+            ch_8 = mean(farmmarket_expend),
+            ch_9 = mean(directfarm_expend),
+            ch_10 = mean(foodbox_expend),
+            ch_11 = mean(mealkit_expend),
+            ch_12 = mean(market_expend))
+
+sum_age_expend <- fulldata %>% group_by(Q5) %>%
+  summarise(ch_1 = mean(supermarketwhole_expend),
+            ch_2 = mean(supermarketfood_expend),
+            ch_3 = mean(healthfood_expend),
+            ch_4 = mean(convenience_expend),
+            ch_5 = mean(online_expend),
+            ch_6 = mean(discount_expend),
+            ch_7 = mean(smallstore_expend),
+            ch_8 = mean(farmmarket_expend),
+            ch_9 = mean(directfarm_expend),
+            ch_10 = mean(foodbox_expend),
+            ch_11 = mean(mealkit_expend),
+            ch_12 = mean(market_expend))
+
+sum_age_expend$sum <- rowSums(sum_age_expend[2:13])
+write.csv(sum_age_expend, "cleaneddata/age_expend.csv")
 
 # regressions RFBC ---------------------------------
 
@@ -112,51 +158,51 @@ saveRDS(fulldata, "fulldata.rds")
 regressions <- list(
   lm(supermarketwhole_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(supermarketfood_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(healthfood_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(convenience_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(online_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(discount_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(smallstore_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(farmmarket_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(directfarm_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(foodbox_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(mealkit_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata),
   lm(market_expend ~ income_weekly + hh_size + rural + 
        locally_grown + organic + local_econ + afford + healthy + social_resp + access + 
-       Appalachia + Delta + GL_Midwest + Heartland + NorthCentral + Northeast +
+       Appalachia + Delta + GL_Midwest + Heartland + RemoteAreas + Northeast +
        Northwest + RioGrande + Southeast + Southwest, data = fulldata) )
 
 
@@ -169,7 +215,7 @@ pvalues <- lapply(regressions, function(model) {
 
 pvalue_df <- do.call(rbind, pvalues)
 colnames(pvalue_df) <- c("(Intercept)", "income_weekly", "hh_size", "rural", 
-                         "Appalachia", "Delta", "GL_Midwest", "Heartland", "NorthCentral",
+                         "Appalachia", "Delta", "GL_Midwest", "Heartland", "RemoteAreas",
                           "Northeast", "Northwest", "RioGrande", "Southeast", "Southwest",
                          "locally_grown", "organic", "local_econ", "afford",
                          "healthy", "social_resp", "access")
@@ -181,7 +227,7 @@ pvalue_df$Regression <- paste0("Regression_", 1:length(regressions))
 # Arrange the data into a long format where each coefficient is its own column
 pvalue_long <- pvalue_df %>%
   select(Regression, "(Intercept)", "income_weekly", "hh_size", "rural", 
-         "Appalachia", "Delta", "GL_Midwest", "Heartland", "NorthCentral",
+         "Appalachia", "Delta", "GL_Midwest", "Heartland", "RemoteAreas",
          "Northeast", "Northwest", "RioGrande", "Southeast", "Southwest",
          "locally_grown", "organic", "local_econ", "afford",
          "healthy", "social_resp", "access") %>%
@@ -200,7 +246,7 @@ adjusted_r2_df <- data.frame(
 
 abs_fulldata <- merge(pvalue_long, adjusted_r2_df)
 
-#write.csv(abs_fulldata, "cleaneddata/regress/abs_fulldata.csv")
+write.csv(abs_fulldata, "cleaneddata/regress/abs_fulldata2.csv")
 
 # Extract coefficients for each regression
 coefficients <- lapply(regressions, function(model) {
@@ -209,7 +255,7 @@ coefficients <- lapply(regressions, function(model) {
 
 coefficient_df <- do.call(rbind, coefficients)
 colnames(coefficient_df) <- c("(Intercept)", "income_weekly", "hh_size", "rural", 
-                              "Appalachia", "Delta", "GL_Midwest", "Heartland", "NorthCentral",
+                              "Appalachia", "Delta", "GL_Midwest", "Heartland", "RemoteAreas",
                               "Northeast", "Northwest", "RioGrande", "Southeast", "Southwest",
                               "locally_grown", "organic", "local_econ", "afford",
                               "healthy", "social_resp", "access")
@@ -221,13 +267,13 @@ coefficient_df$Regression <- paste0("Regression_", 1:length(regressions))
 # Arrange the data into a long format where each coefficient is its own column
 coeffcient_long <- coefficient_df %>%
   select(Regression, "(Intercept)", "income_weekly", "hh_size", "rural", 
-         "Appalachia", "Delta", "GL_Midwest", "Heartland", "NorthCentral",
+         "Appalachia", "Delta", "GL_Midwest", "Heartland", "RemoteAreas",
          "Northeast", "Northwest", "RioGrande", "Southeast", "Southwest",
          "locally_grown", "organic", "local_econ", "afford",
          "healthy", "social_resp", "access") %>%
   arrange(Regression)
 
-#write.csv(coeffcient_long, "cleaneddata/regress/cf_fulldata.csv")
+write.csv(coeffcient_long, "cleaneddata/regress/cf_fulldata2.csv")
 
 
 # regressions po_region -------------------------
