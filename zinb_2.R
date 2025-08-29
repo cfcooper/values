@@ -3,7 +3,7 @@
 
 library(tidyr) 
 library(dplyr)
-#library(ggplot2)
+library(ggplot2)
 #library(reshape)
 library(magrittr)
 #library(formattable)
@@ -234,7 +234,50 @@ fullvalue_count <- rbind(count_values1, count_values2, count_values3, count_valu
 fullvalue_count <- fullvalue_count %>%
   mutate(across(starts_with("count_"), ~ .x / sum_vars)*100)
 
+fullvalue_count <- fullvalue_count %>% rename(locally_grown = count_1)
+fullvalue_count <- fullvalue_count %>% rename(organic = count_2)
+fullvalue_count <- fullvalue_count %>% rename(local_econ = count_3)
+fullvalue_count <- fullvalue_count %>% rename(afford = count_4)
+fullvalue_count <- fullvalue_count %>% rename(healthy = count_5)
+fullvalue_count <- fullvalue_count %>% rename(social_resp = count_6)
+fullvalue_count <- fullvalue_count %>% rename(access = count_7)
+
+# Reshape to long format
+long_data <- pivot_longer(
+  fullvalue_count,
+  cols = c(locally_grown, organic, local_econ, afford,
+           healthy, social_resp, access),
+  names_to = "value",
+  values_to = "percent"
+)
+
+
+
+
+long_data <- long_data %>% mutate(value = factor(value, levels=c("social_resp", "locally_grown", "local_econ", 
+                                                                 "organic", "access", "healthy", "afford")))
+
+long_data$chan <- if_else(long_data$chan == 1, "Supercenter and wholesale", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 2, "Supermarket and grocery", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 3, "Health/natural supermarket", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 4, "Convenience store/corner store", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 5, "Online-only retailer", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 6, "Discount store", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 7, "Smaller format grocery store", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 8, "Farmers Market", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 9, "Direct from producer", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 10, "Food Box", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 11, "Meal/Meal Kit Delivery Service", long_data$chan)
+long_data$chan <- if_else(long_data$chan == 12, "Bakery, deli, meat or fish market", long_data$chan)
+
+
+table_v <- ggplot(data = long_data, aes(x = chan, y= percent, fill = value)) +  geom_col(width = .5) + theme_minimal()
+table_v
+
+
+
 write.csv(fullvalue_count, "valuecount_table.csv")
+
 
 # models 1 ---------------------------------------------
 
